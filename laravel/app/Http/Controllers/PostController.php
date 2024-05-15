@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -13,6 +14,8 @@ class PostController extends Controller
      */
     public function index()
     {
+        $posts = Post::get();
+        dd($posts); exit;
         return view('index');
     }
 
@@ -35,10 +38,13 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required']
+            'first_name' => ['required']
         ]);
 
-        dd($request);
+        $post = new Post();
+        $post->first_name = $request->first_name;
+        $post->save();
+        
     }
 
     /**

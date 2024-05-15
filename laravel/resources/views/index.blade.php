@@ -2,6 +2,7 @@
 
 @section('content')
 
+<div class="main-content mt-5">
 <div class="card mt-5">
 
     <div class="card-header">
@@ -9,8 +10,8 @@
             <div class="col-md-6">
                 <h6>All Posts</h6>
             </div>
-            <div class="col-md-6 justify-content-end">
-                <a href="#" class="btn btn-success mx-1">Create</a>
+            <div class="col-md-6 justify-content-end" style="text-align:right;">
+                <a href="{{route('posts.create')}}" class="btn btn-success mx-1">Create</a>
             </div>
         </div>
     </div>
@@ -48,6 +49,7 @@
             </tbody>
             </table>
     </div>
+</div>
 </div>
 
 @endsection
