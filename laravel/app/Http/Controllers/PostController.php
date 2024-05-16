@@ -15,8 +15,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::get();
-        dd($posts); exit;
-        return view('index');
+        return view('index',['posts' => $posts]);
     }
 
     /**
@@ -43,8 +42,13 @@ class PostController extends Controller
 
         $post = new Post();
         $post->first_name = $request->first_name;
+        $post->dob = '1996-12-01';
+        $post->frequency = 'monthly';
+        $post->daily_frequency = '1-2';
+        $post->result = 'a';
         $post->save();
-        
+
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -66,7 +70,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        return view('create');
+        $post = Post::findOrFail($id);
+        return view('edit',['post' => $post]);
     }
 
     /**
@@ -78,7 +83,17 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        $request->validate([
+            'first_name' => ['required']
+        ]);
+
+        $post = Post::findOrFail($id);
+        $post->first_name = $request->first_name;
+        $post->save();
+
+        return redirect()->route('posts.index');
+
     }
 
     /**
@@ -89,6 +104,8 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return redirect()->route('posts.index');
     }
 }
