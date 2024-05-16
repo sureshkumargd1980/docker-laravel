@@ -32,24 +32,25 @@
             <br/>
             <div class="form-group">
                 <label for="" class="form-group">Date of Birth</label>
-                <input id="datepicker" width="276" />
+                <input id="datepicker" name="dob" width="276" value="{{$post->dob}}" />
             </div>
             <br/>
             <div class="form-group">
                 <label for="" class="form-group">Period</label>
-                <select name="frequeny" id="frequeny" class="form-control">
+                <select name="frequency" id="frequency" class="form-control">
                     <option value="monthly">Monthly</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="daily">Daily</option>
+                    <option value="weekly" <?php if($post->frequency=='weekly') echo "selected"; ?>>Weekly</option>
+                    <option value="daily" <?php if($post->frequency=='daily') echo "selected"; ?>>Daily</option>
                 </select>
             </div>
             <br/>
-            <div class="form-group" id="daily-times" style="display:none">
+            <div class="form-group" id="daily-times" <?php if ($post->frequency=="daily") echo 'style="display:block"'; else echo 'style="display:none"'; ?>
+            )>
                 <label for="" class="form-group">If daily, how many times</label>
-                <select name="frequeny" id="" class="form-control">
+                <select name="daily_frequency" id="" class="form-control">
                     <option value="1-2">1-2</option>
-                    <option value="3-4">3-4</option>
-                    <option value="5">5+</option>
+                    <option value="3-4" <?php if($post->daily_frequency=='3-4') echo "selected"; ?>>3-4</option>
+                    <option value="5+" <?php if($post->daily_frequency=='5') echo "selected"; ?>>5+</option>
                 </select>
             </div>
             <br/>
@@ -64,7 +65,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#frequeny').change(function() {
+        $('#frequency').change(function() {
             var fre = $(this).val();
             if (fre=="daily")
                 $("#daily-times").css("display","block");

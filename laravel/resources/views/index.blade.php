@@ -23,8 +23,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">DOB</th>
-                <th scope="col">Period</th>
-                <th scope="col">No of Times, if daily</th>
+                <th scope="col">Headache (frequency)</th>
+                <th scope="col">Message</th>
                 <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -36,8 +36,16 @@
                     <th scope="row">{{$i++}}</th>
                     <td>{{$post->first_name}}</td>
                     <td>{{$post->dob}}</td>
-                    <td>{{$post->frequency}}</td>
-                    <td>{{$post->daily_frequency}}</td>
+                    <td>
+                        <?php
+                            if ($post->frequency=="daily") {
+                                echo $post->frequency . " " .$post->daily_frequency . "times";
+                            } else {
+                                echo $post->frequency;
+                            }
+                        ?>
+                    </td>
+                    <td>{{$post->message}}</td>
                     <td><a href="{{ route('posts.edit', $post->id) }}" class="btn-primary btn-sm">Edit</a>
                     <form action="{{route('posts.destroy', $post->id)}}" method="POST">
                         @csrf

@@ -10,7 +10,8 @@
 
     <script>
         $('#datepicker').datepicker({
-            uiLibrary: 'bootstrap5'
+            uiLibrary: 'bootstrap5',
+            dateFormat: 'mm-dd-yyyy'
         });
     </script>
 

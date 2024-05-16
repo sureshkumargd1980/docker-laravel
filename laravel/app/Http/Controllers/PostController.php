@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use DateTime;
+use Illuminate\Support\Collection;
 
 class PostController extends Controller
 {
@@ -15,6 +17,15 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::get();
+        $posts->each(function($post){
+            if ($post->result=='a') {
+                $post->message = "Participants must be over 18 years of age";
+            } else if($post->result=='a') {
+                $post->message = "Participant ".$post->first_name." is assigned to Cohort A";
+            } else {
+                $post->message = "Participant ".$post->first_name." is assigned to Cohort B";
+            }
+        });
         return view('index',['posts' => $posts]);
     }
 
@@ -40,15 +51,38 @@ class PostController extends Controller
             'first_name' => ['required']
         ]);
 
+        $date = date_create($request->dob);
+        $dob = date_format($date,"Y-m-d");
+        $result = $this->getResult($dob,$request->frequency);
+
         $post = new Post();
         $post->first_name = $request->first_name;
-        $post->dob = '1996-12-01';
-        $post->frequency = 'monthly';
-        $post->daily_frequency = '1-2';
-        $post->result = 'a';
+        $post->dob = $dob;
+        $post->frequency = $request->frequency;
+        $post->daily_frequency = $request->daily_frequency;
+        $post->result = $result;
         $post->save();
 
         return redirect()->route('posts.index');
+    }
+
+    private function getResult($dob,$frequency) {
+
+        $bday = new DateTime($dob);
+        $today = new Datetime(date('Y-m-d'));
+        $diff = $today->diff($bday);
+        $age = $diff->y;
+
+        if ($age<=18) {
+            return 'a';
+        } else if ($age>=18) {
+            if ($frequency=="monthly" or $frequency=="yearly") {
+                return 'b';
+            } else {
+                return 'c';
+            }
+        }
+
     }
 
     /**
@@ -71,6 +105,8 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::findOrFail($id);
+        $date = date_create($post->dob);
+        $post->dob = date_format($date,"d/m/Y");
         return view('edit',['post' => $post]);
     }
 
@@ -88,8 +124,16 @@ class PostController extends Controller
             'first_name' => ['required']
         ]);
 
+        $date = date_create($request->dob);
+        $dob = date_format($date,"Y-m-d");
+        $result = $this->getResult($dob,$request->frequency);
+
         $post = Post::findOrFail($id);
         $post->first_name = $request->first_name;
+        $post->dob = $dob;
+        $post->frequency = $request->frequency;
+        $post->daily_frequency = $request->daily_frequency;
+        $post->result = $result;
         $post->save();
 
         return redirect()->route('posts.index');
